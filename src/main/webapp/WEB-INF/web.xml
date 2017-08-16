@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         id="WebApp_ID" version="3.0">
+
+  <display-name>Archetype Created Web Application</display-name>
+
+  <!-- 加载配置文件 -->
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>
+      classpath:applicationContext.xml,
+      classpath:applicationContext-mybatis.xml
+    </param-value>
+  </context-param>
+
+
+  <filter>
+    <filter-name>corsFilter</filter-name>
+    <filter-class>com.zhxu.ssm.utils.CorsFilter</filter-class>
+    <init-param>
+      <param-name>allowOrigin</param-name>
+      <param-value>*</param-value>
+    </init-param>
+    <init-param>
+      <param-name>allowMethods</param-name>
+      <param-value>GET,POST,PUT,DELETE,OPTIONS</param-value>
+    </init-param>
+    <init-param>
+      <param-name>allowCredentials</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <init-param>
+      <param-name>allowHeaders</param-name>
+      <param-value>Content-Type</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>corsFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>SpringEncodingFilter</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+    <init-param>
+      <param-name>foreEncoding</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>SpringEncodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <listener>
+    <description>文件上传的监听</description>
+    <listener-class>org.apache.commons.fileupload.servlet.FileCleanerCleanup</listener-class>
+  </listener>
+
+  <listener>
+    <description>spring监听器</description>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+
+  <listener>
+    <description>防止spring内存溢出监听器</description>
+    <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+  </listener>
+
+  <servlet>
+    <description>spring mvc servlet</description>
+    <servlet-name>springMVC</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <description>spring mvc 配置文件</description>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>classpath:applicationContext-mvc.xml</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet-mapping>
+    <servlet-name>springMVC</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+
+  <!-- 配置session超时时间，单位分钟 -->
+  <session-config>
+    <session-timeout>600</session-timeout>
+  </session-config>
+
+
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+
+</web-app>

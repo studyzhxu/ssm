@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+
+    <mvc:annotation-driven>
+        <mvc:message-converters register-defaults="true" >
+            <bean class="com.zhxu.ssm.utils.MappingFastJsonHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>text/html;charset=UTF-8</value>
+                        <value>application/json</value>
+                    </list>
+                </property>
+                <property name="serializerFeature">
+                    <array>
+                        <value>WriteMapNullValue</value>
+                        <value>QuoteFieldNames</value>
+                        <value>WriteNullListAsEmpty</value>
+                        <value>WriteNullStringAsEmpty</value>
+                        <value>WriteNullNumberAsZero</value>
+                        <value>WriteDateUseDateFormat</value>
+                        <value>DisableCircularReferenceDetect</value>
+                    </array>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!-- 自动扫描controller包下的所有类，使其认为spring mvc的控制器 -->
+    <context:component-scan base-package="com.zhxu.ssm"/>
+
+    <!-- 视图解析器 -->
+    <bean
+        class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!-- 后缀 -->
+        <property name="suffix" value=".jsp"/>
+        <!-- 前缀 -->
+        <property name="prefix" value="/WEB-INF/view/"/>
+        <property name="viewClass"
+              value="org.springframework.web.servlet.view.JstlView"/>
+    </bean>
+
+    <!-- 上传文件 -->
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="utf-8"/>
+        <property name="maxUploadSize" value="10485760000"/>
+        <property name="maxInMemorySize" value="40960"/>
+    </bean>
+
+
+    <mvc:interceptors>
+		<bean class="com.zhxu.ssm.utils.authorization.AllInterceptor">
+			<property name="excludedUrls">
+				<list>
+					<value>/login</value>
+					<value>/list</value>
+				</list>
+			</property>
+		</bean>
+	</mvc:interceptors>
+
+    <!-- 激活自动代理功能 -->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+
+</beans>
